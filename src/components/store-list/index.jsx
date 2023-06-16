@@ -1,27 +1,37 @@
 import React from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { View, FlatList } from "react-native";
-import { useEffect, useState } from "react";
 
-import { loadStores } from "../../store/stores.slice";
+import { loadStores, filterStores } from "../../store/stores.slice";
 
 import StoreItem from "../store-item/index";
 import { styles } from "./styles";
 
-const StoreList = ({ category = 0 }) => {
+const StoreList = ({ category = "all" }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(loadStores());
-  }, [dispatch]);
+    dispatch(filterStores(category));
+  }, [category]);
 
-  const stores = useSelector((state) => state.store);
+  useEffect(() => {
+    dispatch(loadStores());
+  }, []);
+
+  const stores = useSelector((state) => state.stores.stores); // state.stores.selected
+  console.log(stores, "stores-------------------------------------");
 
   const onPress = () => {
     console.log("onPress");
   };
+
   const renderItem = ({ item, onPress }) => {
-    return <StoreItem item={item} />;
+    return item ? <StoreItem item={item} /> : null;
+  };
+
+  const keyExtractor = (item) => {
+    return item ? item.id.toString() : 0;
   };
 
   return (
@@ -29,7 +39,7 @@ const StoreList = ({ category = 0 }) => {
       <FlatList
         data={stores}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={keyExtractor}
         style={styles.list}
       />
     </View>

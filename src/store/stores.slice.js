@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import * as FileSystem from "expo-file-system";
 
 import { fetchStoresFromFirestore, addStoreToFirestore } from "./firebase";
 
@@ -29,7 +30,11 @@ export const selectStore = createAsyncThunk("store/selectStore", (storeId, thunk
 
 export const filterStores = createAsyncThunk("store/filterStores", (category, thunkAPI) => {
   try {
-    const filteredStores = initialState.stores.filter((store) => store.category === category);
+    const { stores } = thunkAPI.getState().store;
+    if (category === "all") {
+      return stores;
+    }
+    const filteredStores = stores.filter((store) => store.category === category);
     return filteredStores;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.message);
@@ -38,9 +43,17 @@ export const filterStores = createAsyncThunk("store/filterStores", (category, th
 
 export const addStore = createAsyncThunk("store/addStore", async (storeData, thunkAPI) => {
   try {
-    const newStore = await addStoreToFirestore(storeData);
+    const fileName = `${storeData.name}.jpg`;
+    const filePath = `${FileSystem.documentDirectory}${fileName}`;
+    await FileSystem.copyAsync({
+      from: storeData.photoUri,
+      to: filePath,
+    });
+    setTimeout(() => {}, 1000);
+    const newStore = await addStoreToFirestore({ ...storeData, photoUri: filePath });
     return newStore;
   } catch (error) {
+    console.error("Error al agregar la tienda", error);
     return thunkAPI.rejectWithValue(error.message);
   }
 });
@@ -67,8 +80,16 @@ const storesSlice = createSlice({
       .addCase(filterStores.fulfilled, (state, action) => {
         state.filteredStores = action.payload;
       })
+      .addCase(addStore.pending, (state) => {
+        state.isLoading = true;
+      })
       .addCase(addStore.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.stores.push(action.payload);
+      })
+      .addCase(addStore.rejected, (state, action) => {
+        state.isLoading = false;
+        console.log("Error al agregar la tienda", action.error);
       });
   },
 });

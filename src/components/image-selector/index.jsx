@@ -5,7 +5,7 @@ import * as ImagePicker from "expo-image-picker";
 import { COLORS } from "../../constants/index";
 import { styles } from "./styles";
 
-export const ImageSelector = ({ onImage }) => {
+export const ImageSelector = ({ onImage, photoTaked }) => {
   const [pickedUrl, setPickedUrl] = useState(null);
 
   const verifyPermissions = async () => {
@@ -39,7 +39,7 @@ export const ImageSelector = ({ onImage }) => {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        {!pickedUrl ? (
+        {!photoTaked ? (
           <Text style={styles.noImageText}>No hay imagen seleccionada</Text>
         ) : (
           <Image source={{ uri: pickedUrl }} style={styles.image} />

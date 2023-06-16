@@ -7,12 +7,12 @@ import { styles } from "./styles";
 const StoreItem = ({ item, onPress }) => {
   return (
     <TouchableOpacity style={styles.cardContainer} onPress={onPress}>
-      <Image source={{ uri: item.image }} style={styles.image} />
+      <Image source={{ uri: item.photoUri }} style={styles.image} />
       <View style={styles.textContainer}>
         <Text style={styles.title}>{item.name}</Text>
         <Text style={styles.subtitle}>*********</Text>
         <Text style={styles.subtitle}>ABIERTO</Text>
-        <Text style={styles.subtitle}>{item.categorie}</Text>
+        <Text style={styles.subtitle}>{item.category}</Text>
       </View>
     </TouchableOpacity>
   );

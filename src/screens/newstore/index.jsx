@@ -5,8 +5,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Picker } from "@react-native-picker/picker";
 
 import { styles } from "./styles";
-import { ImageSelector, Head } from "../../components";
-import { addStore } from "../../store/stores.slice";
+import { ImageSelector, Head, ButtonText } from "../../components";
+import { addStore, loadStores } from "../../store/stores.slice";
 import { COLORS } from "../../constants";
 import { ModalText } from "../../components";
 
@@ -14,7 +14,7 @@ const NewStore = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const [name, setName] = useState("");
-  const [category, setCategory] = useState("Categoria");
+  const [category, setCategory] = useState("Restaurant");
   const [description, setDescription] = useState("");
   const [photoUri, setPhotoUri] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -22,7 +22,7 @@ const NewStore = ({ navigation }) => {
   const handlePickerChange = (value) => {
     switch (value) {
       case "Restaurantes":
-        setCategory("Restaurantes");
+        setCategory("Restaurant");
         break;
       case "Cosmetica":
         setCategory("Cosmetica");
@@ -41,7 +41,7 @@ const NewStore = ({ navigation }) => {
   };
 
   const handleSave = () => {
-    if (!name || !category || category == "Categoria" || !description || !photoUri) {
+    if (!name || !category || !description || !photoUri) {
       setShowModal(true);
       setTimeout(() => {
         setShowModal(false);
@@ -53,8 +53,14 @@ const NewStore = ({ navigation }) => {
           category: category,
           description: description,
           photoUri: photoUri,
-        })
+        }),
+        loadStores()
       );
+      setName("");
+      setCategory("Restaurant");
+      setDescription("");
+      setPhotoUri(null);
+      // navigation.goBack();
     }
   };
 
@@ -94,17 +100,14 @@ const NewStore = ({ navigation }) => {
           onChangeText={(text) => setDescription(text)}
         />
 
-        <ImageSelector onImage={handleImageSelect} />
+        <ImageSelector onImage={handleImageSelect} photoTaked={photoUri} />
 
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.button} onPress={handleSave}>
-            <Text style={styles.buttonText}>GUARDAR</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-            <Text style={styles.buttonText}>CANCELAR</Text>
-          </TouchableOpacity>
+          <ButtonText text="GUARDAR" width={150} height={50} onPress={handleSave} />
+          <ButtonText text="CANCELAR" width={150} height={50} onPress={() => navigation.goBack()} />
         </View>
       </View>
+
       {showModal && (
         <ModalText
           text="Todos los campos son requeridos"

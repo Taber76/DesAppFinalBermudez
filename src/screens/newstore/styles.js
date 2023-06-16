@@ -8,12 +8,6 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
   },
-  content: {
-    height: 200,
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 20,
-  },
   title: {
     fontFamily: "Rubik-Bold",
     fontSize: 18,
@@ -50,20 +44,9 @@ export const styles = StyleSheet.create({
     borderRadius: 4,
   },
   buttonsContainer: {
+    width: "100%",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     marginTop: 20,
-  },
-  button: {
-    flex: 1,
-    backgroundColor: COLORS.primary,
-    borderRadius: 5,
-    paddingVertical: 10,
-    marginHorizontal: 5,
-  },
-  buttonText: {
-    color: COLORS.text,
-    textAlign: "center",
-    fontWeight: "bold",
   },
 });

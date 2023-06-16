@@ -8,6 +8,6 @@ const AppNavigator = () => {
       <TabsNavigator />
     </NavigationContainer>
   );
-}
+};
 
-export default AppNavigator
+export default AppNavigator;

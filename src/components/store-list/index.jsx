@@ -20,7 +20,6 @@ const StoreList = ({ category = "all" }) => {
   }, []);
 
   const stores = useSelector((state) => state.stores.stores); // state.stores.selected
-  console.log(stores, "stores-------------------------------------");
 
   const onPress = () => {
     console.log("onPress");

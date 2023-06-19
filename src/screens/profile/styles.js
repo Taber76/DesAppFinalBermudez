@@ -8,12 +8,6 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
   },
-  content: {
-    height: 200,
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 20,
-  },
   title: {
     fontFamily: "Rubik-Bold",
     fontSize: 18,
@@ -27,43 +21,20 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: COLORS.primary,
   },
-  text: {
-    fontFamily: "Rubik-Regular",
-    fontSize: 20,
-  },
-  picker: {
+  passwordInputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     width: "100%",
     height: 40,
-    fontFamily: "Rubik-Regular",
-    fontSize: 20,
+    backgroundColor: COLORS.primary,
     marginBottom: 10,
-    backgroundColor: COLORS.primary,
   },
-  pickerItem: {
-    fontSize: 20,
-    color: "black",
-    backgroundColor: "black",
-  },
-  pickerDropdown: {
-    marginTop: 2,
-    backgroundColor: "black",
-    borderRadius: 4,
-  },
-  buttonsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
-  },
-  button: {
+  passwordInput: {
     flex: 1,
-    backgroundColor: COLORS.primary,
-    borderRadius: 5,
-    paddingVertical: 10,
-    marginHorizontal: 5,
+    paddingVertical: 5,
   },
-  buttonText: {
-    color: COLORS.text,
-    textAlign: "center",
-    fontWeight: "bold",
+  eyeIconContainer: {
+    position: "absolute",
+    right: 10,
   },
 });

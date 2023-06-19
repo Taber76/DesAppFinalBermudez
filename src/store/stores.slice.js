@@ -15,7 +15,7 @@ export const loadStores = createAsyncThunk("store/loadStores", async (_, thunkAP
     const storesData = await fetchStoresFromFirestore();
     return storesData;
   } catch (error) {
-    console.log("Error al cargar los datos de Frebase", error);
+    console.log("Error al cargar los datos de Firebase", error);
     return thunkAPI.rejectWithValue(error.message);
   }
 });
@@ -49,7 +49,6 @@ export const addStore = createAsyncThunk("store/addStore", async (storeData, thu
       from: storeData.photoUri,
       to: filePath,
     });
-    setTimeout(() => {}, 1000);
     const newStore = await addStoreToFirestore({ ...storeData, photoUri: filePath });
     return newStore;
   } catch (error) {

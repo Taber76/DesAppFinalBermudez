@@ -7,7 +7,7 @@ import { store } from "./store/index";
 import AppNavigator from "./navigation";
 import { styles } from "./styles";
 
-import { init } from "./db";
+import { init } from "./store/db";
 
 init()
   .then(() => {
@@ -15,7 +15,7 @@ init()
   })
   .catch((err) => {
     console.log("Error initializing database");
-    console.log(err.message);
+    console.error(err.message);
   });
 
 export default function App() {

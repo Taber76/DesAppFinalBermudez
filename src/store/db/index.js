@@ -20,18 +20,18 @@ export const init = () => {
   return promise;
 };
 
-export const dropTable = () => {
+export const logoutSqlite = (email) => {
   const promise = new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        "DROP TABLE IF EXISTS userprofile",
-        [],
+        "DELETE FROM userprofile WHERE email = ?",
+        [email],
         () => {
-          console.log("Tabla userprofile eliminada");
+          console.log(`Registro con correo electrónico ${email} eliminado`);
           resolve();
         },
         (_, err) => {
-          console.error("Error al eliminar la tabla userprofile:", err);
+          console.error("Error al eliminar el registro:", err);
           reject(err);
         }
       );
@@ -100,8 +100,8 @@ export const checkUserSqlite = async () => {
           (_, result) => {
             const user = result.rows._array;
             if (user.length > 0) {
-              const userJSON = JSON.stringify(user);
-              resolve(userJSON);
+              //const userJSON = JSON.stringify(user);
+              resolve(user);
             } else {
               resolve("[]");
             }

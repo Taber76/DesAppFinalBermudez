@@ -84,9 +84,7 @@ export const checkUserFirebase = async (email) => {
 
 export const checkPasswordFirebase = async (userData) => {
   try {
-    const queryParams = `?orderBy="email"&equalTo="${userData.email}"`;
-
-    const response = await fetch(`${FIREBASE_REALTIME_DB_URL}/users.json${queryParams}`, {
+    const response = await fetch(`${FIREBASE_REALTIME_DB_URL}/users.json`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -98,18 +96,27 @@ export const checkPasswordFirebase = async (userData) => {
     }
 
     const responseData = await response.json();
-    const matchedUser = Object.values(responseData)[0];
+    let matchedUser = null;
+    for (const key in responseData) {
+      if (responseData.hasOwnProperty(key)) {
+        const user = responseData[key];
+        if (user.email === userData[0].email) {
+          matchedUser = user;
+          break;
+        }
+      }
+    }
 
     if (!matchedUser) {
       throw new Error("Usuario no encontrado");
     }
 
-    if (matchedUser.password === userData.password) {
+    if (matchedUser.password === userData[0].password) {
       return true;
     } else {
       return false;
     }
   } catch (error) {
-    throw new Error("Error al verificar el usuario en Firestore");
+    throw new Error(`Error al verificar el usuario en Firestore: ${error.message}`);
   }
 };

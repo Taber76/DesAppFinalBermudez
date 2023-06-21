@@ -21,10 +21,8 @@ const Profile = () => {
 
   const handleSave = async () => {
     try {
-      //await dropTable();
       await dispatch(addUser({ username, email, password }));
-      const userchk = await checkUserSqlite();
-      console.log("Usuarios-----------------------------:", user);
+      await dispatch(loadUser());
     } catch (error) {
       console.error("Error al guardar o obtener usuarios:", error);
     }

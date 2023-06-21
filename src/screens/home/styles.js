@@ -1,21 +1,30 @@
 import { StyleSheet } from "react-native";
+import { COLORS } from "../../constants/index";
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingVertical: 20,
-  },
-  content: {
-    height: 200,
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
   },
   title: {
+    fontFamily: "Rubik-Bold",
     fontSize: 18,
+    marginBottom: 30,
   },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
+  loginContainer: {
+    width: "100%",
+    alignItems: "center",
+  },
+  inputElement: {
+    height: 50,
+    fontFamily: "Rubik-Regular",
+    fontSize: 20,
+    width: 300,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    textAlign: "center",
+    backgroundColor: COLORS.primary,
   },
 });

@@ -5,27 +5,36 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { loadUser, addUser } from "../../store/user.slice";
 
-import { ButtonText, Head } from "../../components";
+import { ButtonText, Head, ModalText } from "../../components";
+import { COLORS } from "../../constants";
 import { styles } from "./styles";
-import { addUserToSqlite, getAllUsers, checkUserSqlite, dropTable } from "../../store/db";
 import { Ionicons } from "@expo/vector-icons";
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
-  const user = useSelector((state) => state.user);
+  //const user = useSelector((state) => state.user);
 
   const handleSave = async () => {
-    try {
-      await dispatch(addUser({ username, email, password }));
-      await dispatch(loadUser());
-    } catch (error) {
-      console.error("Error al guardar o obtener usuarios:", error);
-    }
+    dispatch(addUser({ username, email, password })).then((result) => {
+      if (result.error) {
+        setShowModal(true);
+        setTimeout(() => {
+          setShowModal(false);
+        }, 3000);
+      } else {
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        dispatch(loadUser());
+        navigation.navigate("Home");
+      }
+    });
   };
 
   const toggleShowPassword = () => {
@@ -62,6 +71,9 @@ const Profile = () => {
         </View>
         <ButtonText text="Guardar" width={200} height={50} onPress={handleSave} />
       </View>
+      {showModal && (
+        <ModalText text="Email ya registrado" width={300} height={100} color={COLORS.primary} />
+      )}
     </View>
   );
 };

@@ -16,13 +16,27 @@ export const loadUser = createAsyncThunk("user/loadUser", async (_, thunkAPI) =>
     if (userData.length === 0) {
       return thunkAPI.rejectWithValue("No hay usuario logueado");
     }
-    const firebaseResponse = await checkPasswordFirebase(userData);
 
-    if (firebaseResponse) {
-      return userData[0];
+    const firebaseResponse = await checkPasswordFirebase(userData);
+    if (firebaseResponse.response) {
+      return userData;
     } else {
       return thunkAPI.rejectWithValue("Error al cargar los datos de usuario");
     }
+  } catch (error) {
+    console.log("Error al cargar los datos de usuario", error);
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const login = createAsyncThunk("user/login", async (userData, thunkAPI) => {
+  try {
+    const firebaseResponse = await checkPasswordFirebase(userData);
+    if (firebaseResponse.response) {
+      await addUserToSqlite({ ...userData, username: firebaseResponse.username });
+      return { ...userData, username: firebaseResponse.username };
+    }
+    return thunkAPI.rejectWithValue("No existe el usuario en la base de datos");
   } catch (error) {
     console.log("Error al cargar los datos de usuario", error);
     return thunkAPI.rejectWithValue(error.message);
@@ -44,7 +58,6 @@ export const addUser = createAsyncThunk("user/addUser", async (userData, thunkAP
     const userFirebase = await checkUserFirebase(userData.email);
     const userSqlite = await checkUserSqlite();
     const hashedPassword = userData.password; //bcrypt.hashSync(userData.password, 10);
-
     if (userFirebase.length !== 0) {
       // Email in Firebase?
 
@@ -60,7 +73,7 @@ export const addUser = createAsyncThunk("user/addUser", async (userData, thunkAP
         }
       } else {
         // Email in Firebase but not in SQLite
-        if (userFirebase.password === hashedPassword) {
+        if (userFirebase[0].password === hashedPassword) {
           addUserToSqlite({ ...userData, password: hashedPassword });
           return userData;
         } else {
@@ -96,7 +109,20 @@ const userSlice = createSlice({
       })
       .addCase(loadUser.rejected, (state) => {
         state.isLoading = false;
-        console.log("Error al cargar los datos de usuario", state);
+        console.log("No hay usuario logueado [Slice]", state);
+      })
+
+      .addCase(login.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isLogged = true;
+        state.isLoading = false;
+      })
+      .addCase(login.rejected, (state) => {
+        state.isLoading = false;
+        console.log("Error al cargar los datos de usuario [Slice]", state);
       })
 
       .addCase(logout.pending, (state) => {
@@ -109,7 +135,7 @@ const userSlice = createSlice({
       })
       .addCase(logout.rejected, (state) => {
         state.isLoading = false;
-        console.log("Error al desloguear", state);
+        console.log("Error al desloguear el usuario [Slice]", state);
       })
 
       .addCase(addUser.pending, (state) => {
@@ -122,7 +148,7 @@ const userSlice = createSlice({
       })
       .addCase(addUser.rejected, (state) => {
         state.isLoading = false;
-        console.log("Error al agregar el usuario", state);
+        console.log("Error al agregar el usuario [Slice]", state);
       });
   },
 });

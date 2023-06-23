@@ -100,7 +100,7 @@ export const checkPasswordFirebase = async (userData) => {
     for (const key in responseData) {
       if (responseData.hasOwnProperty(key)) {
         const user = responseData[key];
-        if (user.email === userData[0].email) {
+        if (user.email === userData.email) {
           matchedUser = user;
           break;
         }
@@ -111,10 +111,10 @@ export const checkPasswordFirebase = async (userData) => {
       throw new Error("Usuario no encontrado");
     }
 
-    if (matchedUser.password === userData[0].password) {
-      return true;
+    if (matchedUser.password === userData.password) {
+      return { response: true, username: matchedUser.username };
     } else {
-      return false;
+      return { response: false };
     }
   } catch (error) {
     throw new Error(`Error al verificar el usuario en Firestore: ${error.message}`);

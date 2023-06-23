@@ -1,33 +1,38 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, TextInput } from "react-native";
+import { View, Text, TextInput } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
-import { addUserToSqlite, getAllUsers, checkUserSqlite } from "../../store/db";
-
-import { loadUser, logout } from "../../store/user.slice";
-import { Head, ButtonText } from "../../components/index";
+import { loadUser, login, logout } from "../../store/user.slice";
+import { Head, ButtonText, ModalText } from "../../components";
+import { COLORS } from "../../constants";
 import { styles } from "./styles";
 
 const Home = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     dispatch(loadUser());
-    console.log("Usuarios-----------------------------:", user);
   }, []);
 
   const handleLogin = async () => {
-    console.log("LOGIN");
-
-    const userchk = await checkUserSqlite();
-    console.log("Usuarios--SQLITE:", userchk);
+    dispatch(login({ email, password })).then((result) => {
+      if (result.error) {
+        setShowModal(true);
+        setTimeout(() => {
+          setShowModal(false);
+        }, 3000);
+      } else {
+        setEmail("");
+        setPassword("");
+      }
+    });
   };
 
   const handleLogout = () => {
-    console.log("LOGOUT");
     dispatch(logout(user.user.email));
   };
 
@@ -36,18 +41,18 @@ const Home = () => {
       <Head />
 
       <View style={styles.container}>
-        {user.user.name ? (
+        {user.isLogged ? (
           <View style={styles.loginContainer}>
-            <Text style={styles.title}>Bienvenido {user.user.name}!</Text>
-            <ButtonText onPress={handleLogout} text="Salir" width={"70%"} height={50} />
+            <Text style={styles.title}>Bienvenido {user.user.username}!</Text>
+            <ButtonText onPress={handleLogout} text="Cerrar sesion" width={"70%"} height={50} />
           </View>
         ) : (
           <View style={styles.loginContainer}>
             <TextInput
               style={styles.inputElement}
-              placeholder="Nombre de usuario"
-              value={username}
-              onChangeText={setUsername}
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
             />
             <TextInput
               style={styles.inputElement}
@@ -60,6 +65,14 @@ const Home = () => {
           </View>
         )}
       </View>
+      {showModal && (
+        <ModalText
+          text="Usuario o contraseña incorrectos"
+          width={300}
+          height={100}
+          color={COLORS.primary}
+        />
+      )}
     </View>
   );
 };

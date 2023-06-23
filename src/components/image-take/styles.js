@@ -5,13 +5,20 @@ import { COLORS } from "../../constants/index";
 export const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    marginHorizontal: 20,
+    marginTop: 5,
   },
   imageContainer: {
-    marginBottom: 10,
+    width: 300,
+    height: 200,
+    backgroundColor: "red",
+    marginBottom: 2,
+  },
+  noImageText: {
+    fontSize: 16,
+    color: COLORS.gray,
   },
   image: {
-    width: 400,
+    width: "100%",
     height: 200,
     resizeMode: "cover",
   },

@@ -1,16 +1,17 @@
-import { View, TouchableOpacity, Text, Alert } from "react-native";
+import { View, TouchableOpacity, Text, Image, Alert } from "react-native";
+import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 
 import { COLORS } from "../../constants/index";
 import { styles } from "./styles";
 
-export const ImageSelector = ({ onImage }) => {
+export const ImageTake = ({ onImage }) => {
   const verifyPermissions = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
       Alert.alert(
         "Insufficient permissions",
-        "You need to grant media library permissions to use this app",
+        "You need to grant camera permissions to use this app",
         [{ text: "Okay" }]
       );
       return false;
@@ -18,10 +19,10 @@ export const ImageSelector = ({ onImage }) => {
     return true;
   };
 
-  const onHandleSelectImage = async () => {
+  const onHandleTakeImage = async () => {
     const hasPermission = await verifyPermissions();
     if (!hasPermission) return;
-    const image = await ImagePicker.launchImageLibraryAsync({
+    const image = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [16, 9],
       quality: 0.7,
@@ -35,10 +36,10 @@ export const ImageSelector = ({ onImage }) => {
   return (
     <TouchableOpacity
       style={[styles.button, { backgroundColor: COLORS.primary }]}
-      onPress={onHandleSelectImage}>
-      <Text style={styles.buttonText}>SELECCIONAR FOTO</Text>
+      onPress={onHandleTakeImage}>
+      <Text style={styles.buttonText}>TOMAR FOTO</Text>
     </TouchableOpacity>
   );
 };
 
-export default ImageSelector;
+export default ImageTake;

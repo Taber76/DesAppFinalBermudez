@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, Image, TextInput, TouchableOpacity } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import { Picker } from "@react-native-picker/picker";
 
 import { styles } from "./styles";
-import { ImageSelector, Head, ButtonText } from "../../components";
+import { ImageTake, ImageSelector, Head, ButtonText } from "../../components";
 import { addStore, loadStores } from "../../store/stores.slice";
 import { COLORS } from "../../constants";
 import { ModalText } from "../../components";
@@ -38,6 +38,7 @@ const NewStore = ({ navigation }) => {
 
   const handleImageSelect = (uri) => {
     setPhotoUri(uri);
+    console.log(photoUri, "photoUri<----------------------");
   };
 
   const handleSave = () => {
@@ -100,7 +101,21 @@ const NewStore = ({ navigation }) => {
           onChangeText={(text) => setDescription(text)}
         />
 
-        <ImageSelector onImage={handleImageSelect} photoTaked={photoUri} />
+        <View style={styles.imageContainer}>
+          {!photoUri ? (
+            <Text style={styles.noImageText}>No hay imagen seleccionada</Text>
+          ) : (
+            <Image source={{ uri: photoUri }} style={styles.image} />
+          )}
+        </View>
+
+        <View style={styles.buttonSelect}>
+          <ImageTake onImage={handleImageSelect} />
+        </View>
+
+        <View style={styles.buttonSelect}>
+          <ImageSelector onImage={handleImageSelect} />
+        </View>
 
         <View style={styles.buttonsContainer}>
           <ButtonText text="GUARDAR" width={150} height={50} onPress={handleSave} />

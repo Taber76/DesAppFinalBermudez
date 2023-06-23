@@ -6,7 +6,7 @@ export const init = () => {
   const promise = new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        "CREATE TABLE IF NOT EXISTS userprofile (id INTEGER PRIMARY KEY, name TEXT, password TEXT, email TEXT, picture TEXT)",
+        "CREATE TABLE IF NOT EXISTS userprofile (id INTEGER PRIMARY KEY, username TEXT, password TEXT, email TEXT, picture TEXT)",
         [],
         () => {
           resolve();
@@ -24,8 +24,8 @@ export const logoutSqlite = (email) => {
   const promise = new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        "DELETE FROM userprofile WHERE email = ?",
-        [email],
+        "DELETE FROM userprofile",
+        [],
         () => {
           console.log(`Registro con correo electrónico ${email} eliminado`);
           resolve();
@@ -41,12 +41,11 @@ export const logoutSqlite = (email) => {
 };
 
 export const addUserToSqlite = (userData) => {
-  console.log("addUserToSqlite INTENTO", userData);
   return new Promise((resolve, reject) => {
     db.transaction(
       (tx) => {
         tx.executeSql(
-          "INSERT INTO userprofile (name, password, email, picture) VALUES (?, ?, ?, ?)",
+          "INSERT INTO userprofile (username, password, email, picture) VALUES (?, ?, ?, ?)",
           [userData.username, userData.password, userData.email, ""],
           (_, result) => {
             if (result.rowsAffected > 0) {
@@ -100,10 +99,9 @@ export const checkUserSqlite = async () => {
           (_, result) => {
             const user = result.rows._array;
             if (user.length > 0) {
-              //const userJSON = JSON.stringify(user);
-              resolve(user);
+              resolve(user[0]);
             } else {
-              resolve("[]");
+              resolve([]);
             }
           },
           (_, err) => {
@@ -116,4 +114,24 @@ export const checkUserSqlite = async () => {
       resolve
     ); // Catch handler and success handler are swapped for proper error handling
   });
+};
+
+export const dropTable = () => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "DROP TABLE IF EXISTS userprofile",
+        [],
+        () => {
+          console.log("Tabla userprofile eliminada");
+          resolve();
+        },
+        (_, err) => {
+          console.error("Error al eliminar la tabla userprofile:", err);
+          reject(err);
+        }
+      );
+    });
+  });
+  return promise;
 };

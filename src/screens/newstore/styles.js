@@ -2,6 +2,9 @@ import { StyleSheet } from "react-native";
 import { COLORS } from "../../constants/index";
 
 export const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
   container: {
     alignItems: "center",
     justifyContent: "center",
@@ -11,6 +14,9 @@ export const styles = StyleSheet.create({
   title: {
     fontFamily: "Rubik-Bold",
     fontSize: 18,
+  },
+  scrollContainer: {
+    flexGrow: 1,
   },
   input: {
     height: 50,
@@ -42,6 +48,18 @@ export const styles = StyleSheet.create({
     marginTop: 2,
     backgroundColor: "black",
     borderRadius: 4,
+  },
+  imageContainer: {
+    marginBottom: 2,
+  },
+  image: {
+    width: 300,
+    height: 200,
+    resizeMode: "cover",
+  },
+  buttonSelect: {
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonsContainer: {
     width: "100%",

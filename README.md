@@ -34,3 +34,6 @@ Aqui se muestra la lista de tiendas almacenadas en firestore (no se ha implement
 Aqui se registra una nueva tienda con la posibilidad de tomar un foto o utilizar una almacenada en el dispositivo.
 ### PERFIL
 Aqui se registra un nuevo usuario. Se verfifica que el email no este refistrado en firebase.
+
+#COMPLEMENTO
+https://expo.dev/@taber76/veganuy?serviceType=classic&distribution=expo-go
